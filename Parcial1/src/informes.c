@@ -144,4 +144,23 @@ int informes_polipropilenoRecicladoPromedioPorCliente(ePedido* arrayPedidos, int
 	return retorno;
 }
 
+//los siguientes informes:
+//a) Cliente con más pedidos pendientes.
+//b) Cliente con más pedidos completados.
+//c) Cliente con más pedidos.
 
+
+int informes_clienteConMasPedidosPendientes(ePedido* arrayPedidos, int limitePedidos, eCliente* arrayClientes, int limiteClientes){
+    int retorno = -1;
+    int clienteConMasPedidosPendientes;
+    int i;
+
+    if(limitePedidos > 0 && arrayPedidos != NULL && limiteClientes > 0 && arrayClientes != NULL)
+	{
+		retorno = 0;
+
+
+	}
+
+    return retorno
+}
