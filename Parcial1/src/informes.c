@@ -234,7 +234,7 @@ int informes_clienteConMasPedidosCompletados(ePedido* arrayPedidos, int limitePe
     return retorno;
 }
 
-
+/*
 int informes_clienteConMasPedidos(ePedido* arrayPedidos, int limitePedidos, eCliente* arrayClientes, int limiteClientes){
     int retorno = -1;
     int cantidadPedidos = 0;
@@ -274,5 +274,5 @@ int informes_clienteConMasPedidos(ePedido* arrayPedidos, int limitePedidos, eCli
 	}
 
     return retorno;
-}
+}*/
 

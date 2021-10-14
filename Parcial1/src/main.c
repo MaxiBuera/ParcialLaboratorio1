@@ -207,7 +207,7 @@ int main()
             case 13:
             	if (flag != 0) {
 
-            		informes_clienteConMasPedidos(arrayPedidos,PEDIDOS,arrayClientes,CLIENTES);
+            		//informes_clienteConMasPedidos(arrayPedidos,PEDIDOS,arrayClientes,CLIENTES);
             	} else {
 
             	     printf("\nDebe ingresar un empleado\n");
