@@ -20,7 +20,7 @@ int main()
     int menu;
     int index;
     int auxiliarId;
-    int flag = 0; // Para entregar debe ser 0
+    int flag = 1; // Para entregar debe ser 0
     char opcion[40];
     int flagAdd;
 
@@ -31,7 +31,7 @@ int main()
     pedido_inicializarArrayPedidos(arrayPedidos,PEDIDOS);
 
     //Solo para testear
-    /*cliente_altaForzada(arrayClientes,CLIENTES,"Telefonica","12345678","Calle Falsa 123","CABA");
+    cliente_altaForzada(arrayClientes,CLIENTES,"Telefonica","12345678","Calle Falsa 123","CABA");
     cliente_altaForzada(arrayClientes,CLIENTES,"Walmart","78945612","Av. Siempre Viva 742","GBA");
     cliente_altaForzada(arrayClientes,CLIENTES,"Asdzxc","45678912","Metropolis 456","Interior");
 
@@ -42,7 +42,7 @@ int main()
     pedido_altaForzada(arrayPedidos,PEDIDOS,PENDIENTE,30,2,0,0,0);
 
     cliente_imprimirClientes(arrayClientes,CLIENTES,arrayPedidos,PEDIDOS);
-    pedido_imprimirPedidos(arrayPedidos,PEDIDOS);*/
+    pedido_imprimirPedidos(arrayPedidos,PEDIDOS);
 
     do{
 
@@ -56,7 +56,9 @@ int main()
         		"8.Imprimir Pedidos Procesados\n"
         		"9.Ingresar una localidad e indicar la cantidad de pedidos pendientes para dicha localidad\n"
         		"10.Cantidad de kilos de polipropileno reciclado promedio por cliente (kilos totales / cantidad de clientes)\n"
-        		"11.Salir\n","\nNo valida\n",&menu,1,11,1);
+        		"11.Cliente con mas pedidos pendientes\n"
+        		"12.Cliente con mas pedidos completados\n"
+        		"14.Salir\n","\nNo valida\n",&menu,1,14,1);
         switch(menu)
         {
 
@@ -184,8 +186,35 @@ int main()
             	     printf("\nDebe ingresar un empleado\n");
             	}
             	break;
+            case 11:
+            	if (flag != 0) {
+
+            		informes_clienteConMasPedidosPendientes(arrayPedidos,PEDIDOS,arrayClientes,CLIENTES);
+            	} else {
+
+            	     printf("\nDebe ingresar un empleado\n");
+            	}
+            	break;
+            case 12:
+            	if (flag != 0) {
+
+            		informes_clienteConMasPedidosCompletados(arrayPedidos,PEDIDOS,arrayClientes,CLIENTES);
+            	} else {
+
+            	     printf("\nDebe ingresar un empleado\n");
+            	}
+            	break;
+            case 13:
+            	if (flag != 0) {
+
+            		informes_clienteConMasPedidos(arrayPedidos,PEDIDOS,arrayClientes,CLIENTES);
+            	} else {
+
+            	     printf("\nDebe ingresar un empleado\n");
+            	}
+            	break;
         }
-    }while(menu != 11);
+    }while(menu != 14);
 
 
     return 0;
