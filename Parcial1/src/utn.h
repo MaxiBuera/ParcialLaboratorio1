@@ -29,6 +29,7 @@ int getValidFloat(char requestMessage[],char errorMessage[], float* input,float 
 int getOpcion(char* input,char message[],char eMessage[], char primerOpcion, char segundaOpcion);
 int getValidAlfaNumerico(char requestMessage[],char errorMessage[], char errorMessageLenght[],char input[], int maxLenght,int attemps);
 int getValidStringAllCharacters(char requestMessage[],char errorMessage[], char errorMessageLenght[],char input[], int maxLenght,int attemps);
+void normalizeTextString(char textString[]);
 
 void clearStdin(void);
 void pause(void);

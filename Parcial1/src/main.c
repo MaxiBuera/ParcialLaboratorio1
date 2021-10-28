@@ -3,11 +3,13 @@
 #include <time.h>
 #include <string.h>
 #include "utn.h"
+#include "localidad.h"
 #include "pedido.h"
 #include "cliente.h"
 #include "informes.h"
 #define OCCUPIED 0
 #define FREE 1
+#define LOCALIDADES 100
 #define CLIENTES 100
 #define PEDIDOS 10
 #define PENDIENTE 0
@@ -20,29 +22,36 @@ int main()
     int menu;
     int index;
     int auxiliarId;
-    int flag = 1; // Para entregar debe ser 0
-    char opcion[40];
+    int flag = 1; // 1 para probar todas las funciones
     int flagAdd;
 
-    eCliente arrayClientes[CLIENTES];
     ePedido arrayPedidos[PEDIDOS];
+    eLocalidad arrayLocalidades[LOCALIDADES];
+    eCliente arrayClientes[CLIENTES];
 
-    cliente_inicializarArrayClientes(arrayClientes,CLIENTES);
+    localidad_inicializarArrayLocalidades(arrayLocalidades,LOCALIDADES);
     pedido_inicializarArrayPedidos(arrayPedidos,PEDIDOS);
+    cliente_inicializarArrayClientes(arrayClientes,CLIENTES);
 
     //Solo para testear
-    cliente_altaForzada(arrayClientes,CLIENTES,"Telefonica","12345678","Calle Falsa 123","CABA");
-    cliente_altaForzada(arrayClientes,CLIENTES,"Walmart","78945612","Av. Siempre Viva 742","GBA");
-    cliente_altaForzada(arrayClientes,CLIENTES,"Asdzxc","45678912","Metropolis 456","Interior");
-
     pedido_altaForzada(arrayPedidos,PEDIDOS,PENDIENTE,20,0,0,0,0);
     pedido_altaForzada(arrayPedidos,PEDIDOS,COMPLETADO,100,1,80,10,10);
     pedido_altaForzada(arrayPedidos,PEDIDOS,COMPLETADO,100,0,80,10,5);
     pedido_altaForzada(arrayPedidos,PEDIDOS,PENDIENTE,10,2,0,0,0);
     pedido_altaForzada(arrayPedidos,PEDIDOS,PENDIENTE,30,2,0,0,0);
 
+    localidad_altaForzada(arrayLocalidades, LOCALIDADES, "CABA");
+    localidad_altaForzada(arrayLocalidades, LOCALIDADES, "GBA");
+    localidad_altaForzada(arrayLocalidades, LOCALIDADES, "Interior");
+
+    cliente_altaForzada(arrayClientes,CLIENTES,"Telefonica","12345678","Calle Falsa 123",0);
+    cliente_altaForzada(arrayClientes,CLIENTES,"Walmart","78945612","Av. Siempre Viva 742",1);
+    cliente_altaForzada(arrayClientes,CLIENTES,"Asdzxc","45678912","Metropolis 456",2);
+
+
     cliente_imprimirClientes(arrayClientes,CLIENTES,arrayPedidos,PEDIDOS);
     pedido_imprimirPedidos(arrayPedidos,PEDIDOS);
+    localidad_imprimirLocalidades(arrayLocalidades,LOCALIDADES);
 
     do{
 
@@ -58,6 +67,7 @@ int main()
         		"10.Cantidad de kilos de polipropileno reciclado promedio por cliente (kilos totales / cantidad de clientes)\n"
         		"11.Cliente con mas pedidos pendientes\n"
         		"12.Cliente con mas pedidos completados\n"
+        		"13.Cliente con mas pedidos\n"
         		"14.Salir\n","\nNo valida\n",&menu,1,14,1);
         switch(menu)
         {
@@ -66,14 +76,14 @@ int main()
 
                 index = cliente_buscarPosicionLibre(arrayClientes,CLIENTES);
                 if(index >= 0){
-                    flagAdd = cliente_nuevoCliente(arrayClientes,CLIENTES,index);
+                    flagAdd = cliente_nuevoCliente(arrayClientes,CLIENTES,index,arrayLocalidades,LOCALIDADES);
                     if(flagAdd == 0)
                         flag = 1;
                 }
                 else{
 
                     printf("\nDebe ingresar un cliente\n");
-                }
+                }localidad_imprimirLocalidades(arrayLocalidades,LOCALIDADES);
                 break;
 
             case 2:
@@ -81,7 +91,7 @@ int main()
                 if(flag!=0){
                 	cliente_mostrarClientesIds(arrayClientes,CLIENTES);
                     getValidInt("\tID Cliente a modificar: ","\nID No valido\n",&auxiliarId,0,CLIENTES,2);
-                    cliente_actualizarCliente(arrayClientes,CLIENTES,auxiliarId-1);
+                    cliente_actualizarCliente(arrayClientes,CLIENTES,auxiliarId-1,arrayLocalidades,LOCALIDADES);
                }
                 else{
 
@@ -169,8 +179,9 @@ int main()
 
             case 9:
             	if (flag != 0) {
-            		getValidString("\nIngrese Localidad a buscar: ","\nDato no Valido","\nError. Localidad no Valida",opcion,40,2);
-            		informes_listaPedidosPendientesPorLocalidad(arrayPedidos,PEDIDOS,arrayClientes,CLIENTES,opcion);
+            		//getValidString("\nIngrese Localidad a buscar: ","\nDato no Valido","\nError. Localidad no Valida",opcion,40,2);
+            		getValidInt("\nIngrese ID de Localidad a buscar: ", "\nID No valido\n", &auxiliarId, 0, LOCALIDADES, 2);
+            		informes_listaPedidosPendientesPorLocalidad(arrayPedidos,PEDIDOS,arrayClientes,CLIENTES,auxiliarId);
             	} else {
 
             		printf("\nDebe ingresar un empleado\n");
@@ -189,7 +200,7 @@ int main()
             case 11:
             	if (flag != 0) {
 
-            		informes_clienteConMasPedidosPendientes(arrayPedidos,PEDIDOS,arrayClientes,CLIENTES);
+            		informes_clienteConMasPedidosPendientes_Completos(arrayPedidos,PEDIDOS,arrayClientes,CLIENTES,PENDIENTE);
             	} else {
 
             	     printf("\nDebe ingresar un empleado\n");
@@ -198,7 +209,7 @@ int main()
             case 12:
             	if (flag != 0) {
 
-            		informes_clienteConMasPedidosCompletados(arrayPedidos,PEDIDOS,arrayClientes,CLIENTES);
+            		informes_clienteConMasPedidosPendientes_Completos(arrayPedidos,PEDIDOS,arrayClientes,CLIENTES,COMPLETADO);
             	} else {
 
             	     printf("\nDebe ingresar un empleado\n");
@@ -207,7 +218,7 @@ int main()
             case 13:
             	if (flag != 0) {
 
-            		//informes_clienteConMasPedidos(arrayPedidos,PEDIDOS,arrayClientes,CLIENTES);
+            		informes_clienteConMasPedidos(arrayPedidos,PEDIDOS,arrayClientes,CLIENTES);
             	} else {
 
             	     printf("\nDebe ingresar un empleado\n");

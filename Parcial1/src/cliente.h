@@ -6,7 +6,7 @@ typedef struct{
     char nombreEmpresa[40];
     char cuit[10];
     char direccion[40];
-    char localidad[40];
+    int idLocalidad;
     int isEmpty;
 }eCliente;
 
@@ -32,7 +32,7 @@ int cliente_inicializarArrayClientes(eCliente* arrayClientes, int limite);
  * \param indice del array donde guardará el empleado
  * \return 0 si la entrada es correcta
  */
-int cliente_nuevoCliente(eCliente* arrayClientes, int limite, int index);
+int cliente_nuevoCliente(eCliente* arrayClientes, int limite, int index, eLocalidad* arrayLocalidades, int limiteLocalidades);
 
 /**
  * \brief Modifica el array de un empleado
@@ -41,8 +41,7 @@ int cliente_nuevoCliente(eCliente* arrayClientes, int limite, int index);
  * \param id Empleado a buscar
  * \return  (-1) si hay error [limite invalido o puntero NULL] - (0) si Ok
  */
-int cliente_actualizarCliente(eCliente* arrayClientes, int limite, int index);
-
+int cliente_actualizarCliente(eCliente* arrayClientes, int limite,int index, eLocalidad* arrayLocalidades, int limiteLocalidades);
 
 /** \brief  Muestra la lista de empleados solo con el nombre, apellido y ID del
             empleado
@@ -90,7 +89,7 @@ int cliente_encontrarClientePorId(eCliente* arrayClientes,int limite, int id);
  * \param sector sector del empleado
  * \return 0 si la entrada es correcta
  */
-int cliente_altaForzada(eCliente* arrayClientes,int limite,char* name,char* lastname, char* salary,char* sector);
+int cliente_altaForzada(eCliente* arrayClientes,int limite,char* nombreEmpresa,char* cuit, char* direccion,int idLocalidad);
 
 /**
  * \brief Muestra el array de Empleados de forma encolumnada.
@@ -98,14 +97,6 @@ int cliente_altaForzada(eCliente* arrayClientes,int limite,char* name,char* last
  * \param limite de array de Empleados
  * \return 0 si la entrada es correcta
  */
-int cliente_imprimirClientes(eCliente* arrayClientes,int limite, ePedido* arrayPedidos, int limitPedidos);
+int cliente_imprimirClientes(eCliente* arrayClientes,int limite, ePedido* arrayPedidos, int limitePedidos);
 
-/** \brief Convierte la cadena pasado como parametro. El primer caracter será
-           mayuscula mientras que el resto será minuscula
- *
- * \param textString    cadena de texto a convertir
- * \return -
- *
- */
-void cliente_normalizeTextString(char textString[]);
 

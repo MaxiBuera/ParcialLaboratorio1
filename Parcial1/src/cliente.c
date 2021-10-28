@@ -3,36 +3,18 @@
 #include <string.h>
 #include <ctype.h>
 #include "utn.h"
+#include "localidad.h"
 #include "pedido.h"
 #include "cliente.h"
 #define SECTOR 10
 #define MINSALARY 1
 #define MAXSALARY 300000
-#define OCCUPIED 0
-#define FREE 1
+#define OCUPADO 0
+#define LIBRE 1
 #define PENDIENTE 0
 #define COMPLETADO 1
 
 static int nextId();
-
-
-void cliente_normalizeTextString(char textString[]){
-
-    int j,i;
-    i = strlen(textString);
-
-    for(j=0;j<i;j++){
-
-        if(j==0){
-
-            textString[j] = toupper(textString[j]);
-        }
-        else{
-
-            textString[j] = tolower(textString[j]);
-        }
-    }
-}
 
 int cliente_inicializarArrayClientes(eCliente* arrayClientes, int limite){
 
@@ -47,22 +29,23 @@ int cliente_inicializarArrayClientes(eCliente* arrayClientes, int limite){
             strcpy(arrayClientes[i].nombreEmpresa,"");
             strcpy(arrayClientes[i].cuit,"");
             strcpy(arrayClientes[i].direccion,"");
-            strcpy(arrayClientes[i].localidad,"");
-            arrayClientes[i].isEmpty = FREE;
+            arrayClientes[i].idLocalidad = -1;
+            arrayClientes[i].isEmpty = LIBRE;
 
         }
     }
     return retorno;
 }
 
-int cliente_nuevoCliente(eCliente* arrayClientes, int limite, int index){
+int cliente_nuevoCliente(eCliente* arrayClientes, int limite, int index, eLocalidad* arrayLocalidades, int limiteLocalidades){
 
     int retorno = -1;
     char nombreEmpresaAux[40];
     char cuitAux[10];
     char direccionAux[40];
-    char localidadAux[40];
+    char descripcionAux[40];
     int id;
+    int idLocalidad;
 
     if(limite > 0 && arrayClientes != NULL){
 
@@ -74,24 +57,36 @@ int cliente_nuevoCliente(eCliente* arrayClientes, int limite, int index){
 
             	if(getStringAlfaNumerico("Ingrese direccion: ",direccionAux)){
 
-            		if(getStringLetras("Ingrese localidad: ",localidadAux)){
-
+            		if(getStringLetras("Ingrese localidad: ",descripcionAux)){
 
             			id = nextId();
-                        cliente_normalizeTextString(nombreEmpresaAux);
+            			idLocalidad = localidad_encontrarLocalidad(arrayLocalidades, limiteLocalidades, descripcionAux);
+            			//si idLocalidad es < 0, la localidad enviada por parametro no existe en el array de localidades
+
+            			if(idLocalidad < 0){
+
+            				idLocalidad = localidadNextId();
+                            normalizeTextString(descripcionAux);
+                            strcpy(arrayLocalidades[idLocalidad].descripcion,descripcionAux);
+                            arrayLocalidades[idLocalidad].id = idLocalidad;
+                            printf("\n%d",idLocalidad);
+            			}
+
+                        normalizeTextString(nombreEmpresaAux);
                         strcpy(arrayClientes[index].nombreEmpresa,nombreEmpresaAux);
 
-                        cliente_normalizeTextString(cuitAux);
+                        normalizeTextString(cuitAux);
                         strcpy(arrayClientes[index].cuit,cuitAux);
 
-                        cliente_normalizeTextString(direccionAux);
+                        normalizeTextString(direccionAux);
                         strcpy(arrayClientes[index].direccion,direccionAux);
 
-                        cliente_normalizeTextString(localidadAux);
-                        strcpy(arrayClientes[index].localidad,localidadAux);
+                        arrayClientes[index].idLocalidad = idLocalidad;
 
-                        arrayClientes[index].isEmpty = OCCUPIED;
+                        arrayClientes[index].isEmpty = OCUPADO;
+                        arrayLocalidades[idLocalidad].isEmpty = OCUPADO;
                         arrayClientes[index].id = id;
+
                         printf("\n\tCliente Agregado...");
                         printf("\n\tID del Cliente: %d", id+1);
                         retorno = 0;
@@ -119,7 +114,7 @@ int cliente_buscarPosicionLibre(eCliente* arrayClientes,int limite)
         retorno = -2;
         for(i=0;i<limite;i++)
         {
-            if(arrayClientes[i].isEmpty == FREE)
+            if(arrayClientes[i].isEmpty == LIBRE)
             {
                 retorno = i;
                 break;
@@ -129,7 +124,7 @@ int cliente_buscarPosicionLibre(eCliente* arrayClientes,int limite)
     return retorno;
 }
 
-int cliente_altaForzada(eCliente* arrayClientes,int limite,char* nombreEmpresa,char* cuit, char* direccion,char* localidad)
+int cliente_altaForzada(eCliente* arrayClientes,int limite,char* nombreEmpresa,char* cuit, char* direccion, int idLocalidad)
 {
     int retorno = -1;
     int i;
@@ -143,35 +138,35 @@ int cliente_altaForzada(eCliente* arrayClientes,int limite,char* nombreEmpresa,c
             strcpy(arrayClientes[i].nombreEmpresa,nombreEmpresa);
             strcpy(arrayClientes[i].cuit,cuit);
             strcpy(arrayClientes[i].direccion,direccion);
-            strcpy(arrayClientes[i].localidad,localidad);
+            arrayClientes[i].idLocalidad = idLocalidad;
             //------------------------------
             //------------------------------
             arrayClientes[i].id = nextId();
-            arrayClientes[i].isEmpty = OCCUPIED;
+            arrayClientes[i].isEmpty = OCUPADO;
         }
         retorno = 0;
     }
     return retorno;
 }
 
-int cliente_imprimirClientes(eCliente* arrayClientes,int limite, ePedido* arrayPedidos, int limitPedidos){
+int cliente_imprimirClientes(eCliente* arrayClientes,int limite, ePedido* arrayPedidos, int limitePedidos){
 
     int retorno = -1;
     int cantidadPedidosPendientes;
     int i;
-    if(limite > 0 && arrayClientes != NULL && limitPedidos > 0 && arrayPedidos != NULL)
+    if(limite > 0 && arrayClientes != NULL && limitePedidos > 0 && arrayPedidos != NULL)
     {
         retorno = 0;
-        printf("\n\tNombre Empresa\t\tCuit\t\tDireccion\t\tLocalidad\tID\tPedidos de recoleccion en estado Pendiente");
+        printf("\n\tNombre Empresa\t\tCuit\t\tDireccion\t\tID Localidad\tID\tPedidos de recoleccion en estado Pendiente");
         printf("\n\t-------------------------------------------------------------------------------------------------------");
         for(i=0;i<limite;i++)
         {
         	if(!arrayClientes[i].isEmpty)
             {
 
-        		cantidadPedidosPendientes = pedido_mostrarCantidadPedidos(arrayPedidos,limitPedidos,arrayClientes[i].id);
+        		cantidadPedidosPendientes = pedido_mostrarCantidadPedidos(arrayPedidos,limitePedidos,arrayClientes[i].id);
 
-           		printf("\n\t%s\t\t%s\t%s\t\t%s\t\t%d\t\t%d",arrayClientes[i].nombreEmpresa,arrayClientes[i].cuit,arrayClientes[i].direccion,arrayClientes[i].localidad,arrayClientes[i].id+1,cantidadPedidosPendientes);
+           		printf("\n\t%s\t\t%s\t%s\t\t%d\t\t%d\t\t%d",arrayClientes[i].nombreEmpresa,arrayClientes[i].cuit,arrayClientes[i].direccion,arrayClientes[i].idLocalidad,arrayClientes[i].id+1,cantidadPedidosPendientes);
            	}
         }
     }
@@ -187,7 +182,7 @@ int cliente_encontrarClientePorId(eCliente* arrayClientes,int limite, int id)
         retorno = -2;
         for(i=0;i<limite;i++)
         {
-            if(arrayClientes[i].isEmpty == OCCUPIED && arrayClientes[i].id == id)
+            if(arrayClientes[i].isEmpty == OCUPADO && arrayClientes[i].id == id)
             {
                 retorno = i;
                 break;
@@ -219,11 +214,12 @@ int cliente_mostrarClientesIds(eCliente* arrayClientes,int limite){
     return retorno;
 }
 
-void cliente_menuUpdateCliente(eCliente* arrayClientes, int index){
+void cliente_menuUpdateCliente(eCliente* arrayClientes, int index, eLocalidad* arrayLocalidades, int limiteLocalidades){
 
     int opc;
     char direccionAux[40];
     char localidadAux[40];
+    int idLocalidad;
 
     printf("\nCliente a Modificar: %s",arrayClientes[index].nombreEmpresa);
 
@@ -235,7 +231,7 @@ void cliente_menuUpdateCliente(eCliente* arrayClientes, int index){
             case 1:
                 if(getStringLetras("\nIngrese direccion: ",direccionAux)){
 
-                    cliente_normalizeTextString(direccionAux);
+                    normalizeTextString(direccionAux);
                     strcpy(arrayClientes[index].direccion,direccionAux);
                     printf("\nDireccion Modificada...");
                 }
@@ -243,16 +239,25 @@ void cliente_menuUpdateCliente(eCliente* arrayClientes, int index){
             case 2:
                 if(getStringLetras("Ingrese localidad: ",localidadAux)){
 
-                    cliente_normalizeTextString(localidadAux);
-                    strcpy(arrayClientes[index].localidad,localidadAux);
-                    printf("\nApellido Modificado...");
+                	idLocalidad = localidad_encontrarLocalidad(arrayLocalidades, limiteLocalidades, localidadAux);
+                	if(idLocalidad < 0){
+
+                		idLocalidad = localidadNextId();
+                		normalizeTextString(localidadAux);
+                		arrayLocalidades[idLocalidad].id = idLocalidad;
+                        strcpy(arrayLocalidades[idLocalidad].descripcion,localidadAux);
+                        arrayLocalidades[idLocalidad].isEmpty = OCUPADO;
+                	}
+
+                    arrayClientes[index].idLocalidad = idLocalidad;
+                    printf("\nLocalidad Modificada...");
                 }
                 break;
         }
     }while(opc != 3);
 }
 
-int cliente_actualizarCliente(eCliente* arrayClientes, int limite,int index){
+int cliente_actualizarCliente(eCliente* arrayClientes, int limite,int index, eLocalidad* arrayLocalidades, int limiteLocalidades){
 
     int i;
     int retorno = -1;
@@ -260,8 +265,8 @@ int cliente_actualizarCliente(eCliente* arrayClientes, int limite,int index){
     i = cliente_encontrarClientePorId(arrayClientes,limite,index);
     if(i >= 0)
     {
-        cliente_menuUpdateCliente(arrayClientes,i);
-        arrayClientes[i].isEmpty = OCCUPIED;
+        cliente_menuUpdateCliente(arrayClientes,i,arrayLocalidades,limiteLocalidades);
+        arrayClientes[i].isEmpty = OCUPADO;
         retorno = 0;
     }
     else{
@@ -282,7 +287,7 @@ int cliente_eliminarCliente(eCliente* arrayClientes, int limite,int index){
         printf("\nCliente a eliminar: %s",arrayClientes[i].nombreEmpresa);
         confirm = getChar("\n¿Desea eliminar el cliente? [s/n]: ");
         if(confirm == 's' || confirm == 'S'){
-            arrayClientes[i].isEmpty = FREE;
+            arrayClientes[i].isEmpty = LIBRE;
             printf("\n\n\tCliente Eliminado...");
             retorno = 0;
         }

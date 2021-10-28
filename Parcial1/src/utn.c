@@ -526,6 +526,31 @@ int getOpcion(char* input,char message[],char eMessage[], char primerOpcion, cha
     return retorno;
 }
 
+/** \brief Convierte la cadena pasado como parametro. El primer caracter será
+           mayuscula mientras que el resto será minuscula
+ *
+ * \param textString    cadena de texto a convertir
+ * \return -
+ *
+ */
+void normalizeTextString(char textString[]){
+
+    int j,i;
+    i = strlen(textString);
+
+    for(j=0;j<i;j++){
+
+        if(j==0){
+
+            textString[j] = toupper(textString[j]);
+        }
+        else{
+
+            textString[j] = tolower(textString[j]);
+        }
+    }
+}
+
 /**
  * \brief Limpia el stdin, similar a fflush
  * \param -

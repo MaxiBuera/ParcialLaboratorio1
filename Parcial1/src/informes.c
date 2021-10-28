@@ -3,6 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "utn.h"
+#include "localidad.h"
 #include "pedido.h"
 #include "cliente.h"
 #include "informes.h"
@@ -70,7 +71,7 @@ int informes_imprimirPedidosSegunEstado(ePedido* arrayPedidos, int limite, eClie
 	return retorno;
 }
 
-int informes_listaPedidosPendientesPorLocalidad(ePedido* arrayPedidos, int limitePedidos, eCliente* arrayClientes, int limiteClientes, char* localidad ){
+int informes_listaPedidosPendientesPorLocalidad(ePedido* arrayPedidos, int limitePedidos, eCliente* arrayClientes, int limiteClientes, int localidad){
 
 	int returnValue = -1;
 	int i;
@@ -88,14 +89,14 @@ int informes_listaPedidosPendientesPorLocalidad(ePedido* arrayPedidos, int limit
 
 			if (!arrayPedidos[i].isEmpty && arrayPedidos[i].estado == PENDIENTE){
 
-				if (!strcmp(arrayClientes[idCliente].localidad,localidad)){
+				if (arrayClientes[idCliente].idLocalidad == localidad){
 
 					cantidadPedidosLocalidad++;
 				}
 			}
 		}
 
-		printf("\n\nCantidad de pedidos Pendientes para la localidad: %s",localidad);
+		printf("\n\nCantidad de pedidos Pendientes para la localidad: %d",localidad);
 		printf("\n\t%d pedidos pendientes",cantidadPedidosLocalidad);
 	}
 
@@ -150,56 +151,34 @@ int informes_polipropilenoRecicladoPromedioPorCliente(ePedido* arrayPedidos, int
 //c) Cliente con más pedidos.
 
 
-int informes_clienteConMasPedidosPendientes(ePedido* arrayPedidos, int limitePedidos, eCliente* arrayClientes, int limiteClientes){
-    int retorno = -1;
-    int cantidadPedidosPendientes = 0;
-    int cantidadPedidosPendientesMAX = 0;
-    int idClienteConMasPedidosPendientes;
-    int i;
-    int j;
+/*char* imprimirModo(int modoInforme){
+	char modo[20];
 
-    if(limitePedidos > 0 && arrayPedidos != NULL && limiteClientes > 0 && arrayClientes != NULL)
-	{
-		retorno = 0;
+	switch(modoInforme){
 
-        //printf("\nCliente con mas pedidos pendientes: ID Cliente(s): %d");
-        for(i=0;i<limiteClientes;i++){
-
-            if(!arrayClientes[i].isEmpty){
-
-                for(j=0;j<limitePedidos;j++){
-
-                if(arrayPedidos[j].idCliente == arrayClientes[i].id){
-
-                    if(arrayPedidos[j].estado == PENDIENTE)
-                        cantidadPedidosPendientes++;
-                    }
-                }
-            }
-
-            if(cantidadPedidosPendientes > cantidadPedidosPendientesMAX){
-
-                cantidadPedidosPendientesMAX = cantidadPedidosPendientes;
-                idClienteConMasPedidosPendientes = arrayClientes[i].id;
-            }
-
-            cantidadPedidosPendientes = 0;
-        }
-
-        printf("\nID del cliente con mas pedidos pendientes: ID Cliente %d",idClienteConMasPedidosPendientes+1);
+	    case PENDIENTE:
+	    	strcpy(modo,"pendientes");
+	    	break;
+	    case COMPLETADO:
+	    	strcpy(modo,"completos");
+	    	break;
+	    case 3:
+	    	strcpy(modo,""); //pendientes y completos
+	    	break;
 	}
 
-    return retorno;
-}
+	return modo;
+}*/
 
 
-int informes_clienteConMasPedidosCompletados(ePedido* arrayPedidos, int limitePedidos, eCliente* arrayClientes, int limiteClientes){
+int informes_clienteConMasPedidosPendientes_Completos(ePedido* arrayPedidos, int limitePedidos, eCliente* arrayClientes, int limiteClientes, int modoInforme){
     int retorno = -1;
-    int cantidadPedidosCompletados = 0;
-    int cantidadPedidosCompletadosMAX = 0;
-    int idClienteConMasPedidosCompletados;
+    int cantidadPedidos = 0;
+    int cantidadPedidosMAX = 0;
+    int idClienteConMasPedidos;
     int i;
     int j;
+
 
     if(limitePedidos > 0 && arrayPedidos != NULL && limiteClientes > 0 && arrayClientes != NULL)
 	{
@@ -211,30 +190,30 @@ int informes_clienteConMasPedidosCompletados(ePedido* arrayPedidos, int limitePe
 
                 for(j=0;j<limitePedidos;j++){
 
-                if(arrayPedidos[j].idCliente == arrayClientes[i].id){
+					if(arrayPedidos[j].idCliente == arrayClientes[i].id){
 
-                    if(arrayPedidos[j].estado == COMPLETADO)
-                        cantidadPedidosCompletados++;
-                    }
+						if(arrayPedidos[j].estado == modoInforme)// PENDIENTE - COMPLETO
+							cantidadPedidos++;
+					}
                 }
             }
 
-            if(cantidadPedidosCompletados > cantidadPedidosCompletadosMAX){
+            if(cantidadPedidos > cantidadPedidosMAX){
 
-                cantidadPedidosCompletadosMAX = cantidadPedidosCompletados;
-                idClienteConMasPedidosCompletados = arrayClientes[i].id;
+            	cantidadPedidosMAX = cantidadPedidos;
+            	idClienteConMasPedidos = arrayClientes[i].id;
             }
 
-            cantidadPedidosCompletados = 0;
+            cantidadPedidos = 0;
         }
 
-        printf("\nID del cliente con mas pedidos completados: ID Cliente %d",idClienteConMasPedidosCompletados+1);
+        printf("\nID del cliente con mas pedidos %s: ID Cliente %d", !modoInforme ? "pendientes" : "completos" ,idClienteConMasPedidos+1);
 	}
 
     return retorno;
 }
 
-/*
+
 int informes_clienteConMasPedidos(ePedido* arrayPedidos, int limitePedidos, eCliente* arrayClientes, int limiteClientes){
     int retorno = -1;
     int cantidadPedidos = 0;
@@ -253,12 +232,9 @@ int informes_clienteConMasPedidos(ePedido* arrayPedidos, int limitePedidos, eCli
 
                 for(j=0;j<limitePedidos;j++){
 
-                if(arrayPedidos[j].idCliente == arrayClientes[i].id)
-
-
-                    cantidadPedidos++;
-
-
+					if(arrayPedidos[j].idCliente == arrayClientes[i].id)
+						cantidadPedidos++;
+                }
             }
 
             if(cantidadPedidos > cantidadPedidosMAX){
@@ -268,11 +244,12 @@ int informes_clienteConMasPedidos(ePedido* arrayPedidos, int limitePedidos, eCli
             }
 
             cantidadPedidos = 0;
+
         }
 
         printf("\nID del cliente con mas pedidos: ID Cliente %d",idClienteConMasPedidos+1);
+
 	}
 
     return retorno;
-}*/
-
+}

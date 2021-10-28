@@ -3,13 +3,14 @@
 #include <string.h>
 #include <ctype.h>
 #include "utn.h"
+#include "localidad.h"
 #include "pedido.h"
 #include "cliente.h"
 #define SECTOR 10
 #define MINSALARY 1
 #define MAXSALARY 300000
-#define OCCUPIED 0
-#define FREE 1
+#define OCUPADO 0
+#define LIBRE 1
 #define MINRECOLECCION 1
 #define MAXRECOLECCION 10000
 #define PENDIENTE 0
@@ -33,7 +34,7 @@ int pedido_inicializarArrayPedidos(ePedido* arrayPedidos, int limit){
             arrayPedidos[i].residuos.kilosHDPE = 0;
             arrayPedidos[i].residuos.kilosLDPE = 0;
             arrayPedidos[i].residuos.kilosPP = 0;
-            arrayPedidos[i].isEmpty = FREE;
+            arrayPedidos[i].isEmpty = LIBRE;
 
         }
     }
@@ -49,7 +50,7 @@ int pedido_buscarPosicionLibre(ePedido* arrayPedidos,int limit)
         retorno = -2;
         for(i=0;i<limit;i++)
         {
-            if(arrayPedidos[i].isEmpty == FREE)
+            if(arrayPedidos[i].isEmpty == LIBRE)
             {
                 retorno = i;
                 break;
@@ -75,7 +76,7 @@ int pedido_crearPedido(ePedido* arrayPedidos, int limit, int index){
         	arrayPedidos[index].kilosRecoleccion = kilosRecoleccionAux;
         	arrayPedidos[index].estado = PENDIENTE;
         	arrayPedidos[index].id = id;
-        	arrayPedidos[index].isEmpty = OCCUPIED;
+        	arrayPedidos[index].isEmpty = OCUPADO;
         	printf("\n\tPedido Generado...");
         	printf("\n\tID de Pedido: %d", id+1);
         	retorno = 0;
@@ -113,7 +114,7 @@ int pedido_altaForzada(ePedido* arrayPedidos,int limite,int estado, int kilosRec
             //------------------------------
             //------------------------------
             arrayPedidos[i].id = nextId();
-            arrayPedidos[i].isEmpty = OCCUPIED;
+            arrayPedidos[i].isEmpty = OCUPADO;
         }
     }
     return retorno;
@@ -174,7 +175,7 @@ int pedido_encontrarPedidoById(ePedido* arrayPedidos,int limite, int id)
         retorno = -2;
         for(i=0;i<limite;i++)
         {
-            if(arrayPedidos[i].isEmpty == OCCUPIED && arrayPedidos[i].id == id)
+            if(arrayPedidos[i].isEmpty == OCUPADO && arrayPedidos[i].id == id)
             {
                 retorno = i;
                 break;
