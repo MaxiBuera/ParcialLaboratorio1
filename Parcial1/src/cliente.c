@@ -69,7 +69,7 @@ int cliente_nuevoCliente(eCliente* arrayClientes, int limite, int index, eLocali
                             normalizeTextString(descripcionAux);
                             strcpy(arrayLocalidades[idLocalidad].descripcion,descripcionAux);
                             arrayLocalidades[idLocalidad].id = idLocalidad;
-                            printf("\n%d",idLocalidad);
+                            //printf("\n%d",idLocalidad);
             			}
 
                         normalizeTextString(nombreEmpresaAux);

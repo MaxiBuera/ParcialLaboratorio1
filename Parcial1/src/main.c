@@ -52,6 +52,8 @@ int main()
     cliente_imprimirClientes(arrayClientes,CLIENTES,arrayPedidos,PEDIDOS);
     pedido_imprimirPedidos(arrayPedidos,PEDIDOS);
     localidad_imprimirLocalidades(arrayLocalidades,LOCALIDADES);
+    printf("\n");
+    informes_imprimirPedidosSegunEstado(arrayPedidos,PEDIDOS,arrayClientes,CLIENTES,PENDIENTE);
 
     do{
 

@@ -171,11 +171,84 @@ int informes_polipropilenoRecicladoPromedioPorCliente(ePedido* arrayPedidos, int
 }*/
 
 
+int imprimirIdClienteConMasPedidosPendientes_Completos(ePedido* arrayPedidos, int limitePedidos, eCliente* arrayClientes, int limiteClientes, int cantidadPedidosMAX, int modoInforme){
+
+	int retorno = -1;
+	int i,j;
+	int cantidadPedidos = 0;
+
+	if(limitePedidos > 0 && arrayPedidos != NULL && limiteClientes > 0 && arrayClientes != NULL)
+	{
+		retorno = 0;
+
+		for(i=0;i<limiteClientes;i++){
+
+			if(!arrayClientes[i].isEmpty){
+
+				for(j=0;j<limitePedidos;j++){
+
+					if(arrayPedidos[j].idCliente == arrayClientes[i].id)
+
+						if(arrayPedidos[j].idCliente == arrayClientes[i].id){
+
+							if(arrayPedidos[j].estado == modoInforme)// PENDIENTE - COMPLETO
+								cantidadPedidos++;
+						}
+				}
+			}
+
+			if(cantidadPedidos == cantidadPedidosMAX){
+
+				printf("\n\tID de Cliente %d",arrayClientes[i].id+1);
+			}
+
+			cantidadPedidos = 0;
+		}
+	}
+
+	return retorno;
+}
+
+
+int imprimirIdClienteConMasPedidos(ePedido* arrayPedidos, int limitePedidos, eCliente* arrayClientes, int limiteClientes, int cantidadPedidosMAX){
+
+	int retorno = -1;
+	int i,j;
+	int cantidadPedidos = 0;
+
+	if(limitePedidos > 0 && arrayPedidos != NULL && limiteClientes > 0 && arrayClientes != NULL)
+	{
+		retorno = 0;
+
+		for(i=0;i<limiteClientes;i++){
+
+			if(!arrayClientes[i].isEmpty){
+
+				for(j=0;j<limitePedidos;j++){
+
+					if(arrayPedidos[j].idCliente == arrayClientes[i].id)
+
+						cantidadPedidos++;
+				}
+			}
+
+			if(cantidadPedidos == cantidadPedidosMAX){
+
+				printf("\n\tID de Cliente %d",arrayClientes[i].id+1);
+			}
+
+			cantidadPedidos = 0;
+		}
+	}
+
+	return retorno;
+}
+
+
 int informes_clienteConMasPedidosPendientes_Completos(ePedido* arrayPedidos, int limitePedidos, eCliente* arrayClientes, int limiteClientes, int modoInforme){
     int retorno = -1;
     int cantidadPedidos = 0;
     int cantidadPedidosMAX = 0;
-    int idClienteConMasPedidos;
     int i;
     int j;
 
@@ -201,24 +274,24 @@ int informes_clienteConMasPedidosPendientes_Completos(ePedido* arrayPedidos, int
             if(cantidadPedidos > cantidadPedidosMAX){
 
             	cantidadPedidosMAX = cantidadPedidos;
-            	idClienteConMasPedidos = arrayClientes[i].id;
             }
 
             cantidadPedidos = 0;
         }
 
-        printf("\nID del cliente con mas pedidos %s: ID Cliente %d", !modoInforme ? "pendientes" : "completos" ,idClienteConMasPedidos+1);
+        printf("\nID del cliente con mas pedidos %s:", !modoInforme ? "pendientes" : "completos" );
+        imprimirIdClienteConMasPedidosPendientes_Completos(arrayPedidos,limitePedidos,arrayClientes,limiteClientes,cantidadPedidosMAX,modoInforme);
 	}
 
     return retorno;
 }
 
 
+
 int informes_clienteConMasPedidos(ePedido* arrayPedidos, int limitePedidos, eCliente* arrayClientes, int limiteClientes){
     int retorno = -1;
     int cantidadPedidos = 0;
     int cantidadPedidosMAX = 0;
-    int idClienteConMasPedidos;
     int i;
     int j;
 
@@ -240,15 +313,13 @@ int informes_clienteConMasPedidos(ePedido* arrayPedidos, int limitePedidos, eCli
             if(cantidadPedidos > cantidadPedidosMAX){
 
                 cantidadPedidosMAX = cantidadPedidos;
-                idClienteConMasPedidos = arrayClientes[i].id;
             }
 
             cantidadPedidos = 0;
-
         }
 
-        printf("\nID del cliente con mas pedidos: ID Cliente %d",idClienteConMasPedidos+1);
-
+        printf("\nID del cliente con mas pedidos: ");
+        imprimirIdClienteConMasPedidos(arrayPedidos,limitePedidos,arrayClientes,limiteClientes,cantidadPedidosMAX);
 	}
 
     return retorno;
