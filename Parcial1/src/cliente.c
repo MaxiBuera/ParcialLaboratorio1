@@ -212,6 +212,7 @@ void cliente_menuUpdateCliente(eCliente* arrayClientes, int index, eLocalidad* a
     int opc;
     char direccionAux[40];
     int idLocalidad;
+    int localidadValida;
 
     printf("\nCliente a Modificar: %s",arrayClientes[index].nombreEmpresa);
 
@@ -233,9 +234,10 @@ void cliente_menuUpdateCliente(eCliente* arrayClientes, int index, eLocalidad* a
 
             	if(!getValidInt("Ingrese localidad: ","\nError\n",&idLocalidad,0,LOCALIDADES,2)){
 
-            		if(!localidad_encontrarLocalidad(arrayLocalidades,limiteLocalidades,idLocalidad)){
+            		localidadValida = localidad_encontrarLocalidad(arrayLocalidades,limiteLocalidades,idLocalidad);
+            		if(localidadValida > 0){
 
-						arrayClientes[index].idLocalidad = idLocalidad;
+            			arrayClientes[index].idLocalidad = idLocalidad;
 						printf("\nLocalidad Modificada...");
             		}
                 }
@@ -252,8 +254,9 @@ int cliente_actualizarCliente(eCliente* arrayClientes, int limite,int index, eLo
     i = cliente_encontrarClientePorId(arrayClientes,limite,index);
     if(i >= 0)
     {
+    	//printf("\n%s",arrayClientes[i].direccion);
         cliente_menuUpdateCliente(arrayClientes,i,arrayLocalidades,limiteLocalidades);
-        //arrayClientes[i].isEmpty = OCUPADO;
+
         retorno = 0;
     }
     else{

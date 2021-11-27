@@ -22,7 +22,7 @@ int informes_imprimirPedidosSegunEstado(ePedido* arrayPedidos, int limite, eClie
 
 	int retorno = -1;
 	int i;
-	int idCliente;
+	int indiceCliente;
 
 	if(limite > 0 && arrayPedidos != NULL && limitClientes > 0 && arrayClientes != NULL)
 	{
@@ -34,10 +34,10 @@ int informes_imprimirPedidosSegunEstado(ePedido* arrayPedidos, int limite, eClie
 
 			if (!arrayPedidos[i].isEmpty && arrayPedidos[i].estado == estado){
 
-				idCliente = cliente_encontrarClientePorId(arrayClientes, limitClientes, arrayPedidos[i].idCliente);
+				indiceCliente = cliente_encontrarClientePorId(arrayClientes, limitClientes, arrayPedidos[i].idCliente);
 
 				printf("\n\t%d\t",arrayPedidos[i].id+1);
-				printf("\t%s\t\t%s",arrayClientes[idCliente].cuit,arrayClientes[idCliente].direccion);
+				printf("\t%s\t\t%s",arrayClientes[indiceCliente].cuit,arrayClientes[indiceCliente].direccion);
 				printf("\t\t\t%d",arrayPedidos[i].kilosRecoleccion);
 			}
 		}
