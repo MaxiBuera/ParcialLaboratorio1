@@ -7,6 +7,7 @@
 #include "pedido.h"
 #include "cliente.h"
 #define SECTOR 10
+#define LOCALIDADES 100
 #define MINSALARY 1
 #define MAXSALARY 300000
 #define OCUPADO 0
@@ -43,7 +44,6 @@ int cliente_nuevoCliente(eCliente* arrayClientes, int limite, int index, eLocali
     char nombreEmpresaAux[40];
     char cuitAux[10];
     char direccionAux[40];
-    char descripcionAux[40];
     int id;
     int idLocalidad;
 
@@ -57,39 +57,32 @@ int cliente_nuevoCliente(eCliente* arrayClientes, int limite, int index, eLocali
 
             	if(getStringAlfaNumerico("Ingrese direccion: ",direccionAux)){
 
-            		if(getStringLetras("Ingrese localidad: ",descripcionAux)){
+        			localidad_imprimirLocalidades(arrayLocalidades,limiteLocalidades);
 
-            			id = nextId();
-            			idLocalidad = localidad_encontrarLocalidad(arrayLocalidades, limiteLocalidades, descripcionAux);
-            			//si idLocalidad es < 0, la localidad enviada por parametro no existe en el array de localidades
+            		if(!getValidInt("Ingrese localidad: ","\nLocalidad no valida\n",&idLocalidad,0,LOCALIDADES,2)){
 
-            			if(idLocalidad < 0){
+            			if(!localidad_encontrarLocalidad(arrayLocalidades,limiteLocalidades,idLocalidad)){
 
-            				idLocalidad = localidadNextId();
-                            normalizeTextString(descripcionAux);
-                            strcpy(arrayLocalidades[idLocalidad].descripcion,descripcionAux);
-                            arrayLocalidades[idLocalidad].id = idLocalidad;
-                            //printf("\n%d",idLocalidad);
+            				id = nextId();
+
+            				normalizeTextString(nombreEmpresaAux);
+            				strcpy(arrayClientes[index].nombreEmpresa,nombreEmpresaAux);
+
+							normalizeTextString(cuitAux);
+							strcpy(arrayClientes[index].cuit,cuitAux);
+
+							normalizeTextString(direccionAux);
+							strcpy(arrayClientes[index].direccion,direccionAux);
+
+							arrayClientes[index].idLocalidad = idLocalidad;
+							arrayClientes[index].isEmpty = OCUPADO;
+							arrayLocalidades[idLocalidad].isEmpty = OCUPADO;
+							arrayClientes[index].id = id;
+
+							printf("\n\tCliente Agregado...");
+							printf("\n\tID del Cliente: %d", id+1);
+							retorno = 0;
             			}
-
-                        normalizeTextString(nombreEmpresaAux);
-                        strcpy(arrayClientes[index].nombreEmpresa,nombreEmpresaAux);
-
-                        normalizeTextString(cuitAux);
-                        strcpy(arrayClientes[index].cuit,cuitAux);
-
-                        normalizeTextString(direccionAux);
-                        strcpy(arrayClientes[index].direccion,direccionAux);
-
-                        arrayClientes[index].idLocalidad = idLocalidad;
-
-                        arrayClientes[index].isEmpty = OCUPADO;
-                        arrayLocalidades[idLocalidad].isEmpty = OCUPADO;
-                        arrayClientes[index].id = id;
-
-                        printf("\n\tCliente Agregado...");
-                        printf("\n\tID del Cliente: %d", id+1);
-                        retorno = 0;
                     }
                 }
             }
@@ -218,7 +211,6 @@ void cliente_menuUpdateCliente(eCliente* arrayClientes, int index, eLocalidad* a
 
     int opc;
     char direccionAux[40];
-    char localidadAux[40];
     int idLocalidad;
 
     printf("\nCliente a Modificar: %s",arrayClientes[index].nombreEmpresa);
@@ -237,20 +229,15 @@ void cliente_menuUpdateCliente(eCliente* arrayClientes, int index, eLocalidad* a
                 }
                 break;
             case 2:
-                if(getStringLetras("Ingrese localidad: ",localidadAux)){
+            	localidad_imprimirLocalidades(arrayLocalidades,limiteLocalidades);
 
-                	idLocalidad = localidad_encontrarLocalidad(arrayLocalidades, limiteLocalidades, localidadAux);
-                	if(idLocalidad < 0){
+            	if(!getValidInt("Ingrese localidad: ","\nError\n",&idLocalidad,0,LOCALIDADES,2)){
 
-                		idLocalidad = localidadNextId();
-                		normalizeTextString(localidadAux);
-                		arrayLocalidades[idLocalidad].id = idLocalidad;
-                        strcpy(arrayLocalidades[idLocalidad].descripcion,localidadAux);
-                        arrayLocalidades[idLocalidad].isEmpty = OCUPADO;
-                	}
+            		if(!localidad_encontrarLocalidad(arrayLocalidades,limiteLocalidades,idLocalidad)){
 
-                    arrayClientes[index].idLocalidad = idLocalidad;
-                    printf("\nLocalidad Modificada...");
+						arrayClientes[index].idLocalidad = idLocalidad;
+						printf("\nLocalidad Modificada...");
+            		}
                 }
                 break;
         }
@@ -266,7 +253,7 @@ int cliente_actualizarCliente(eCliente* arrayClientes, int limite,int index, eLo
     if(i >= 0)
     {
         cliente_menuUpdateCliente(arrayClientes,i,arrayLocalidades,limiteLocalidades);
-        arrayClientes[i].isEmpty = OCUPADO;
+        //arrayClientes[i].isEmpty = OCUPADO;
         retorno = 0;
     }
     else{
@@ -305,6 +292,29 @@ int cliente_eliminarCliente(eCliente* arrayClientes, int limite,int index){
 }
 
 
+int cliente_mostrarPedidosIds(ePedido* arrayPedidos,int limite, eCliente* arrayClientes, int limiteClientes){
+
+    int retorno = -1;
+    int i;
+    int indiceCliente;
+    if(limite > 0 && arrayPedidos != NULL)
+    {
+        retorno = 1;
+        printf("\n\tID de pedidos\tID de clientes\tCliente");
+        printf("\n\t----------------------------------------");
+        for(i=0;i<limite;i++)
+        {
+        	if(!arrayPedidos[i].isEmpty && arrayPedidos[i].estado == PENDIENTE)
+            {
+        		indiceCliente = cliente_encontrarClientePorId(arrayClientes, limiteClientes, arrayPedidos[i].idCliente);
+        		retorno = 0;
+           		printf("\n\t%d\t\t%d\t\t%s",arrayPedidos[i].id+1,arrayPedidos[i].idCliente+1,arrayClientes[indiceCliente].nombreEmpresa);
+        	}
+        }
+    }
+    printf("\n\n");
+    return retorno;
+}
 
 static int nextId()
 {

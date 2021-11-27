@@ -60,7 +60,7 @@ int pedido_buscarPosicionLibre(ePedido* arrayPedidos,int limit)
     return retorno;
 }
 
-int pedido_crearPedido(ePedido* arrayPedidos, int limit, int index){
+int pedido_crearPedido(ePedido* arrayPedidos, int limit, int index, int idCliente){
 
     int retorno = -1;
     int kilosRecoleccionAux;
@@ -77,6 +77,7 @@ int pedido_crearPedido(ePedido* arrayPedidos, int limit, int index){
         	arrayPedidos[index].estado = PENDIENTE;
         	arrayPedidos[index].id = id;
         	arrayPedidos[index].isEmpty = OCUPADO;
+        	arrayPedidos[index].idCliente = idCliente;
         	printf("\n\tPedido Generado...");
         	printf("\n\tID de Pedido: %d", id+1);
         	retorno = 0;

@@ -98,9 +98,10 @@ int localidad_imprimirLocalidades(eLocalidad* arrayLocalidades,int limite){
         	if(!arrayLocalidades[i].isEmpty)
             {
 
-           		printf("\n\t%s\t\t%d",arrayLocalidades[i].descripcion,arrayLocalidades[i].id);
+           		printf("\n\t%2s %22d",arrayLocalidades[i].descripcion,arrayLocalidades[i].id);
            	}
         }
+        printf("\n\n");
     }
     return retorno;
 }
@@ -128,7 +129,9 @@ int localidad_altaForzada(eLocalidad* arrayLocalidades,int limite,char* descripc
     return retorno;
 }
 
-int localidad_encontrarLocalidad(eLocalidad* arrayLocalidades,int limite, char* descripcion)
+
+
+int localidad_encontrarLocalidad(eLocalidad* arrayLocalidades,int limite, int idLocalidad)
 {
     int retorno = -1;
     int i;
@@ -137,7 +140,7 @@ int localidad_encontrarLocalidad(eLocalidad* arrayLocalidades,int limite, char* 
         retorno = -2;
         for(i=0;i<limite;i++)
         {
-            if(arrayLocalidades[i].isEmpty == OCUPADO && !strcmp(arrayLocalidades[i].descripcion, descripcion))
+            if(arrayLocalidades[i].isEmpty == OCUPADO && arrayLocalidades[i].id == idLocalidad)
             {
                 retorno = i;
                 break;

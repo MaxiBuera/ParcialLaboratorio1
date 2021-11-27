@@ -11,10 +11,9 @@
 #define FREE 1
 #define LOCALIDADES 100
 #define CLIENTES 100
-#define PEDIDOS 10
+#define PEDIDOS 100
 #define PENDIENTE 0
 #define COMPLETADO 1
-
 
 int main()
 {
@@ -22,6 +21,8 @@ int main()
     int menu;
     int index;
     int auxiliarId;
+    int idClienteValido;
+    int idLocalidadValida;
     int flag = 1; // 1 para probar todas las funciones
     int flagAdd;
 
@@ -85,7 +86,7 @@ int main()
                 else{
 
                     printf("\nDebe ingresar un cliente\n");
-                }localidad_imprimirLocalidades(arrayLocalidades,LOCALIDADES);
+                }
                 break;
 
             case 2:
@@ -119,18 +120,24 @@ int main()
                 if(flag!=0){
                 	cliente_mostrarClientesIds(arrayClientes,CLIENTES);
                 	getValidInt("\nIngrese ID de Cliente: ","\nID No valido\n",&auxiliarId,0,PEDIDOS,2);
+                	idClienteValido = cliente_encontrarClientePorId(arrayClientes,CLIENTES,auxiliarId-1);
                 	index = pedido_buscarPosicionLibre(arrayPedidos,PEDIDOS);
-                	pedido_crearPedido(arrayPedidos,PEDIDOS,index);
+                	if(index >= 0 && idClienteValido > 0){
+                		pedido_crearPedido(arrayPedidos,PEDIDOS,index,auxiliarId-1);
+                	}
+                	else {
+                		printf("\nError\n");
+                	}
                 }
-                    else{
+                else{
 
-                        printf("\nDebe ingresar un empleado\n");
+					printf("\nDebe ingresar un empleado\n");
                 }
                 break;
             case 5:
 
 				if (flag != 0) {
-					if(pedido_mostrarPedidosIds(arrayPedidos, PEDIDOS) == 0){
+					if(cliente_mostrarPedidosIds(arrayPedidos, PEDIDOS,arrayClientes,CLIENTES) == 0){
 
 						getValidInt("\nIngrese ID de Pedido: ", "\nID No valido\n", &auxiliarId, 0, PEDIDOS, 2);
 						pedido_procesarPedido(arrayPedidos,PEDIDOS,auxiliarId-1);
@@ -181,9 +188,17 @@ int main()
 
             case 9:
             	if (flag != 0) {
-            		//getValidString("\nIngrese Localidad a buscar: ","\nDato no Valido","\nError. Localidad no Valida",opcion,40,2);
+
+            	    localidad_imprimirLocalidades(arrayLocalidades,LOCALIDADES);
             		getValidInt("\nIngrese ID de Localidad a buscar: ", "\nID No valido\n", &auxiliarId, 0, LOCALIDADES, 2);
-            		informes_listaPedidosPendientesPorLocalidad(arrayPedidos,PEDIDOS,arrayClientes,CLIENTES,auxiliarId);
+            		idLocalidadValida = localidad_encontrarLocalidad(arrayLocalidades,LOCALIDADES,auxiliarId);
+            		printf("\n%d",idLocalidadValida);
+                	if(idLocalidadValida >= 0){
+                		informes_listaPedidosPendientesPorLocalidad(arrayLocalidades,LOCALIDADES,arrayPedidos,PEDIDOS,arrayClientes,CLIENTES,auxiliarId,idLocalidadValida);
+                	}
+                	else {
+						printf("\nError\n");
+					}
             	} else {
 
             		printf("\nDebe ingresar un empleado\n");

@@ -39,7 +39,7 @@ int pedido_inicializarArrayPedidos(ePedido* arrayPedidos, int limite);
  * \param indice del array donde guardará el empleado
  * \return 0 si la entrada es correcta
  */
-int pedido_crearPedido(ePedido* arrayPedidos, int limite, int index);
+int pedido_crearPedido(ePedido* arrayPedidos, int limite, int index, int idCliente);
 
 /**
  * \brief Alta de una empleado sin usar ciclos (solo para pruebas)

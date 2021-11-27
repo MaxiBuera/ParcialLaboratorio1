@@ -28,63 +28,38 @@ int informes_imprimirPedidosSegunEstado(ePedido* arrayPedidos, int limite, eClie
 	{
 		retorno = 0;
 
-		switch(estado){
+		printf("\n\tID de pedidos\tCUIT del Cliente\tDireccion del Cliente\tCantidad de kilos a recolectar");
+		printf("\n\t------------------------------------------------------------------------------------------------------------------------");
+		for(i=0;i<limite;i++){
 
-			case PENDIENTE:
+			if (!arrayPedidos[i].isEmpty && arrayPedidos[i].estado == estado){
 
-				printf("\n\tID de pedidos\tCUIT del Cliente\tDireccion del Cliente\tCantidad de kilos a recolectar");
-				printf("\n\t------------------------------------------------------------------------------------------------------------------------");
-				for(i=0;i<limite;i++){
+				idCliente = cliente_encontrarClientePorId(arrayClientes, limitClientes, arrayPedidos[i].idCliente);
 
-					if (estado == arrayPedidos[i].estado && !arrayPedidos[i].isEmpty){
-
-						idCliente = arrayPedidos[i].idCliente;
-
-						printf("\n\t%d\t",arrayPedidos[i].id+1);
-						printf("\t%s\t\t%s",arrayClientes[idCliente].cuit,arrayClientes[idCliente].direccion);
-						printf("\t\t\t%d",arrayPedidos[i].kilosRecoleccion);
-					}
-				}
-				break;
-			case COMPLETADO:
-
-				printf("\n\tID de pedidos\tCUIT del Cliente\tDireccion del Cliente\tCantidad de kilos a recolectar\tHDPE\tLDPE\tPP");
-				printf("\n\t------------------------------------------------------------------------------------------------------------------------");
-
-				for(i=0;i<limite;i++){
-
-					if (estado == COMPLETADO && !arrayPedidos[i].isEmpty && arrayPedidos[i].estado == COMPLETADO) {
-
-						idCliente = arrayPedidos[i].idCliente;
-
-						printf("\n\t%d\t",arrayPedidos[i].id+1);
-						printf("\t%s\t\t%s",arrayClientes[idCliente].cuit,arrayClientes[idCliente].direccion);
-						printf("\t\t%d\t\t\t\t%d\t%d\t%d",arrayPedidos[i].kilosRecoleccion,arrayPedidos[i].residuos.kilosHDPE,arrayPedidos[i].residuos.kilosLDPE,arrayPedidos[i].residuos.kilosPP);
-
-					}
-				}
-				break;
+				printf("\n\t%d\t",arrayPedidos[i].id+1);
+				printf("\t%s\t\t%s",arrayClientes[idCliente].cuit,arrayClientes[idCliente].direccion);
+				printf("\t\t\t%d",arrayPedidos[i].kilosRecoleccion);
+			}
 		}
 	}
-
 
 	return retorno;
 }
 
-int informes_listaPedidosPendientesPorLocalidad(ePedido* arrayPedidos, int limitePedidos, eCliente* arrayClientes, int limiteClientes, int localidad){
+int informes_listaPedidosPendientesPorLocalidad(eLocalidad* arrayLocalidades, int limiteLocalidades, ePedido* arrayPedidos, int limitePedidos, eCliente* arrayClientes, int limiteClientes, int localidad, int indiceLocalidad){
 
-	int returnValue = -1;
+	int retorno = -1;
 	int i;
 	int idCliente;
 	int cantidadPedidosLocalidad = 0;
 
 	if(limitePedidos > 0 && arrayPedidos != NULL && limiteClientes > 0 && arrayClientes != NULL)
 	{
-		returnValue = -2;
+		retorno = -2;
 
 		for(i=0;i<limitePedidos;i++){
 
-			returnValue = 0;
+			retorno = 0;
 			idCliente = arrayPedidos[i].idCliente;
 
 			if (!arrayPedidos[i].isEmpty && arrayPedidos[i].estado == PENDIENTE){
@@ -96,11 +71,11 @@ int informes_listaPedidosPendientesPorLocalidad(ePedido* arrayPedidos, int limit
 			}
 		}
 
-		printf("\n\nCantidad de pedidos Pendientes para la localidad: %d",localidad);
+		printf("\n\nCantidad de pedidos Pendientes para la localidad: %s",arrayLocalidades[indiceLocalidad].descripcion);
 		printf("\n\t%d pedidos pendientes",cantidadPedidosLocalidad);
 	}
 
-	return returnValue;
+	return retorno;
 }
 
 
@@ -187,19 +162,18 @@ int imprimirIdClienteConMasPedidosPendientes_Completos(ePedido* arrayPedidos, in
 
 				for(j=0;j<limitePedidos;j++){
 
-					if(arrayPedidos[j].idCliente == arrayClientes[i].id)
+					if(arrayPedidos[j].idCliente == arrayClientes[i].id){
 
-						if(arrayPedidos[j].idCliente == arrayClientes[i].id){
-
-							if(arrayPedidos[j].estado == modoInforme)// PENDIENTE - COMPLETO
-								cantidadPedidos++;
-						}
+						if(arrayPedidos[j].estado == modoInforme)// PENDIENTE - COMPLETO
+							cantidadPedidos++;
+					}
 				}
 			}
 
 			if(cantidadPedidos == cantidadPedidosMAX){
 
-				printf("\n\tID de Cliente %d",arrayClientes[i].id+1);
+				//indiceCliente = cliente_encontrarClientePorId(arrayClientes,limiteClientes,arrayClientes[i].id);
+				printf("\n\tCliente ID %d - %s",arrayClientes[i].id+1,arrayClientes[i].nombreEmpresa);
 			}
 
 			cantidadPedidos = 0;

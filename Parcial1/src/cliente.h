@@ -100,3 +100,4 @@ int cliente_altaForzada(eCliente* arrayClientes,int limite,char* nombreEmpresa,c
 int cliente_imprimirClientes(eCliente* arrayClientes,int limite, ePedido* arrayPedidos, int limitePedidos);
 
 
+int cliente_mostrarPedidosIds(ePedido* arrayPedidos,int limite, eCliente* arrayClientes, int limiteClientes);
