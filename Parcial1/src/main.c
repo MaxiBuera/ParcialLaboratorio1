@@ -51,10 +51,10 @@ int main()
 
 
     cliente_imprimirClientes(arrayClientes,CLIENTES,arrayPedidos,PEDIDOS);
-    pedido_imprimirPedidos(arrayPedidos,PEDIDOS);
-    localidad_imprimirLocalidades(arrayLocalidades,LOCALIDADES);
+    //pedido_imprimirPedidos(arrayPedidos,PEDIDOS);
+    //localidad_imprimirLocalidades(arrayLocalidades,LOCALIDADES);
     printf("\n");
-    informes_imprimirPedidosSegunEstado(arrayPedidos,PEDIDOS,arrayClientes,CLIENTES,PENDIENTE);
+    //informes_imprimirPedidosSegunEstado(arrayPedidos,PEDIDOS,arrayClientes,CLIENTES,PENDIENTE);
 
     do{
 
@@ -122,10 +122,11 @@ int main()
                 	getValidInt("\nIngrese ID de Cliente: ","\nID No valido\n",&auxiliarId,0,PEDIDOS,2);
                 	idClienteValido = cliente_encontrarClientePorId(arrayClientes,CLIENTES,auxiliarId-1);
                 	index = pedido_buscarPosicionLibre(arrayPedidos,PEDIDOS);
-                	if(index >= 0 && idClienteValido > 0){
+                	if(index >= 0 && idClienteValido >= 0){
                 		pedido_crearPedido(arrayPedidos,PEDIDOS,index,auxiliarId-1);
                 	}
                 	else {
+                		printf("\nACA %d",idClienteValido);
                 		printf("\nError\n");
                 	}
                 }
@@ -138,7 +139,6 @@ int main()
 
 				if (flag != 0) {
 					if(cliente_mostrarPedidosIds(arrayPedidos, PEDIDOS,arrayClientes,CLIENTES) == 0){
-
 						getValidInt("\nIngrese ID de Pedido: ", "\nID No valido\n", &auxiliarId, 0, PEDIDOS, 2);
 						pedido_procesarPedido(arrayPedidos,PEDIDOS,auxiliarId-1);
 					}
@@ -192,7 +192,6 @@ int main()
             	    localidad_imprimirLocalidades(arrayLocalidades,LOCALIDADES);
             		getValidInt("\nIngrese ID de Localidad a buscar: ", "\nID No valido\n", &auxiliarId, 0, LOCALIDADES, 2);
             		idLocalidadValida = localidad_encontrarLocalidad(arrayLocalidades,LOCALIDADES,auxiliarId);
-            		printf("\n%d",idLocalidadValida);
                 	if(idLocalidadValida >= 0){
                 		informes_listaPedidosPendientesPorLocalidad(arrayLocalidades,LOCALIDADES,arrayPedidos,PEDIDOS,arrayClientes,CLIENTES,auxiliarId,idLocalidadValida);
                 	}

@@ -220,12 +220,11 @@ int pedido_procesarPedido(ePedido* arrayPedidos, int limite, int index){
     int flag = 0;
 
 	i = pedido_encontrarPedidoById(arrayPedidos,limite,index);
-	if(i >= 0)
+	if(i >= 0 && arrayPedidos[i].estado == PENDIENTE)
 	{
 		residuosDisponibles = arrayPedidos[i].kilosRecoleccion;
 
 		for(residuos=1;residuos<4;residuos++){
-
 
 			switch(residuos){
 
@@ -269,8 +268,6 @@ int pedido_procesarPedido(ePedido* arrayPedidos, int limite, int index){
 				break;
 			}
 		}
-
-
 	}
 	else{
 

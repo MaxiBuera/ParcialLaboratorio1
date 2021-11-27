@@ -140,7 +140,7 @@ int localidad_encontrarLocalidad(eLocalidad* arrayLocalidades,int limite, int id
         retorno = -2;
         for(i=0;i<limite;i++)
         {
-            if(arrayLocalidades[i].isEmpty == OCUPADO && arrayLocalidades[i].id == idLocalidad)
+        	if(arrayLocalidades[i].isEmpty == OCUPADO && arrayLocalidades[i].id == idLocalidad)
             {
                 retorno = i;
                 break;

@@ -61,7 +61,7 @@ int cliente_nuevoCliente(eCliente* arrayClientes, int limite, int index, eLocali
 
             		if(!getValidInt("Ingrese localidad: ","\nLocalidad no valida\n",&idLocalidad,0,LOCALIDADES,2)){
 
-            			if(!localidad_encontrarLocalidad(arrayLocalidades,limiteLocalidades,idLocalidad)){
+            			if(localidad_encontrarLocalidad(arrayLocalidades,limiteLocalidades,idLocalidad >= 0)){
 
             				id = nextId();
 
@@ -151,7 +151,7 @@ int cliente_imprimirClientes(eCliente* arrayClientes,int limite, ePedido* arrayP
     {
         retorno = 0;
         printf("\n\tNombre Empresa\t\tCuit\t\tDireccion\t\tID Localidad\tID\tPedidos de recoleccion en estado Pendiente");
-        printf("\n\t-------------------------------------------------------------------------------------------------------");
+        printf("\n\t---------------------------------------------------------------------------------------------------------------------------------------");
         for(i=0;i<limite;i++)
         {
         	if(!arrayClientes[i].isEmpty)
@@ -222,11 +222,14 @@ void cliente_menuUpdateCliente(eCliente* arrayClientes, int index, eLocalidad* a
         switch(opc)
         {
             case 1:
-                if(getStringLetras("\nIngrese direccion: ",direccionAux)){
+                if(getStringAlfaNumerico("Ingrese direccion: ",direccionAux)){
 
                     normalizeTextString(direccionAux);
                     strcpy(arrayClientes[index].direccion,direccionAux);
                     printf("\nDireccion Modificada...");
+                }
+                else{
+                	printf("\nError");
                 }
                 break;
             case 2:
@@ -235,10 +238,13 @@ void cliente_menuUpdateCliente(eCliente* arrayClientes, int index, eLocalidad* a
             	if(!getValidInt("Ingrese localidad: ","\nError\n",&idLocalidad,0,LOCALIDADES,2)){
 
             		localidadValida = localidad_encontrarLocalidad(arrayLocalidades,limiteLocalidades,idLocalidad);
-            		if(localidadValida > 0){
+            		if(localidadValida >= 0){
 
             			arrayClientes[index].idLocalidad = idLocalidad;
 						printf("\nLocalidad Modificada...");
+            		}
+            		else {
+            			printf("\nError");
             		}
                 }
                 break;
@@ -254,7 +260,7 @@ int cliente_actualizarCliente(eCliente* arrayClientes, int limite,int index, eLo
     i = cliente_encontrarClientePorId(arrayClientes,limite,index);
     if(i >= 0)
     {
-    	//printf("\n%s",arrayClientes[i].direccion);
+
         cliente_menuUpdateCliente(arrayClientes,i,arrayLocalidades,limiteLocalidades);
 
         retorno = 0;
@@ -310,8 +316,8 @@ int cliente_mostrarPedidosIds(ePedido* arrayPedidos,int limite, eCliente* arrayC
         	if(!arrayPedidos[i].isEmpty && arrayPedidos[i].estado == PENDIENTE)
             {
         		indiceCliente = cliente_encontrarClientePorId(arrayClientes, limiteClientes, arrayPedidos[i].idCliente);
-        		retorno = 0;
            		printf("\n\t%d\t\t%d\t\t%s",arrayPedidos[i].id+1,arrayPedidos[i].idCliente+1,arrayClientes[indiceCliente].nombreEmpresa);
+           		retorno = 0;
         	}
         }
     }
