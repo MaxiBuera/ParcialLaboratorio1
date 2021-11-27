@@ -98,7 +98,7 @@ int main()
                }
                 else{
 
-                    printf("\nDebe ingresar un empleado\n");
+                    printf("\nDebe ingresar un cliente\n");
                 }
                 break;
 
@@ -111,7 +111,7 @@ int main()
                 }
                 else{
 
-                    printf("\nDebe ingresar un empleado\n");
+                    printf("\nDebe ingresar un cliente\n");
                 }
                 break;
 
@@ -131,7 +131,7 @@ int main()
                 }
                 else{
 
-					printf("\nDebe ingresar un empleado\n");
+					printf("\nDebe ingresar un cliente\n");
                 }
                 break;
             case 5:
@@ -150,7 +150,7 @@ int main()
 
 				} else {
 
-					printf("\nDebe ingresar un empleado\n");
+					printf("\nDebe ingresar un cliente\n");
 				}
 				break;
 
@@ -161,7 +161,7 @@ int main()
             		cliente_imprimirClientes(arrayClientes,CLIENTES,arrayPedidos,PEDIDOS);
             	} else {
 
-            		printf("\nDebe ingresar un empleado\n");
+            		printf("\nDebe ingresar un cliente\n");
             	}
             	break;
 
@@ -172,7 +172,7 @@ int main()
             		informes_imprimirPedidosSegunEstado(arrayPedidos,PEDIDOS,arrayClientes,CLIENTES,PENDIENTE);
             	} else {
 
-            		printf("\nDebe ingresar un empleado\n");
+            		printf("\nDebe ingresar un cliente\n");
             	}
             	break;
             case 8:
@@ -182,7 +182,7 @@ int main()
              		informes_imprimirPedidosSegunEstado(arrayPedidos,PEDIDOS,arrayClientes,CLIENTES,COMPLETADO);
                 } else {
 
-                	printf("\nDebe ingresar un empleado\n");
+                	printf("\nDebe ingresar un cliente\n");
                 }
                 break;
 
@@ -201,7 +201,7 @@ int main()
 					}
             	} else {
 
-            		printf("\nDebe ingresar un empleado\n");
+            		printf("\nDebe ingresar un cliente\n");
             	}
             	break;
 
@@ -211,7 +211,7 @@ int main()
             		informes_polipropilenoRecicladoPromedioPorCliente(arrayPedidos,PEDIDOS,arrayClientes,CLIENTES);
             	} else {
 
-            	     printf("\nDebe ingresar un empleado\n");
+            	     printf("\nDebe ingresar un cliente\n");
             	}
             	break;
             case 11:
@@ -220,7 +220,7 @@ int main()
             		informes_clienteConMasPedidosPendientes_Completos(arrayPedidos,PEDIDOS,arrayClientes,CLIENTES,PENDIENTE);
             	} else {
 
-            	     printf("\nDebe ingresar un empleado\n");
+            	     printf("\nDebe ingresar un cliente\n");
             	}
             	break;
             case 12:
@@ -229,7 +229,7 @@ int main()
             		informes_clienteConMasPedidosPendientes_Completos(arrayPedidos,PEDIDOS,arrayClientes,CLIENTES,COMPLETADO);
             	} else {
 
-            	     printf("\nDebe ingresar un empleado\n");
+            	     printf("\nDebe ingresar un cliente\n");
             	}
             	break;
             case 13:
@@ -238,7 +238,7 @@ int main()
             		informes_clienteConMasPedidos(arrayPedidos,PEDIDOS,arrayClientes,CLIENTES);
             	} else {
 
-            	     printf("\nDebe ingresar un empleado\n");
+            	     printf("\nDebe ingresar un cliente\n");
             	}
             	break;
         }

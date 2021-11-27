@@ -24,8 +24,8 @@ typedef struct{
  *          esta funcion coloca el flag (isEmpty) en True en
  *          todas las posiciones del array
  *
- * \param   array de Empleados
- * \param   limite del array de Empleados
+ * \param   array de Pedidos
+ * \param   limite del array de Pedidos
  *
  * \return 0 si la entrada es correcta, sino -1
  *
@@ -33,9 +33,9 @@ typedef struct{
 int pedido_inicializarArrayPedidos(ePedido* arrayPedidos, int limite);
 
  /**
- * \brief Carga al array de clientes con el indice recibido por parametro
- * \param array de Cliente
- * \param limite de array de Cliente
+ * \brief Carga al array de pedidos con el indice recibido por parametro
+ * \param array de Pedidos
+ * \param limite de array de Pedidos
  * \param indice del array donde guardará el empleado
  * \return 0 si la entrada es correcta
  */
@@ -43,41 +43,48 @@ int pedido_crearPedido(ePedido* arrayPedidos, int limite, int index, int idClien
 
 /**
  * \brief Alta de una empleado sin usar ciclos (solo para pruebas)
- * \param array de Empleados
- * \param limite de array de Empleados
- * \param name del empleado
- * \param lastname del empleado
- * \param salary salario del empleado
- * \param sector sector del empleado
+ * \param array de Pedidos
+ * \param limite del array de Pedidos
+ * \param estado del pedido
+ * \param kilosRecoleccion del pedido
+ * \param idCliente  del cliente
+ * \param HDPE-LDPE-PP tipo de plastico
  * \return 0 si la entrada es correcta
  */
 int pedido_altaForzada(ePedido* arrayPedidos,int limite,int estado, int kilosRecoleccion, int idCliente, int HDPE, int LDPE, int PP);
 
 /**
- * \brief Muestra el array de Empleados de forma encolumnada.
- * \param array de Empleados
- * \param limite de array de Empleados
+ * \brief Muestra el array de Pedidos de forma encolumnada.
+ * \param array de Pedidos
+ * \param limite de array de Pedidos
  * \return 0 si la entrada es correcta
  */
 int pedido_imprimirPedidos(ePedido* arrayPedidos,int limite);
 
 /**
  * \brief Busca una posicion vacia del array
- * \param array de Empleado
- * \param limite de array de Empleados
+ * \param array de Pedidos
+ * \param limite de array de Pedidos
  * \return -1 o -2 si falla
  */
 int pedido_buscarPosicionLibre(ePedido* arrayPedidos,int limite);
 
-/** \brief  Muestra la lista de empleados solo con el nombre, apellido y ID del
-            empleado
- * \param   arrayClientes  array de Empleados
- * \param   limit  limite del array de Empleados
+/** \brief  Muestra la lista de Pedidos solo con el id del pedido y el id y nombre del
+            cliente
+ * \param   arrayClientes  array de Pedidos
+ * \param   limit  limite del array de Pedidos
  * \return  (-1) si hay error [limite invalido o puntero NULL] - (0) si Ok
  *
  */
 int pedido_mostrarPedidosIds(ePedido* arrayPedidos,int limite);
 
+/** \brief  Procesa los tipos de plasticos del pedido. Deja como Completado el pedido
+ * \param   arrayClientes  array de Pedidos
+ * \param   limit  limite del array de Pedidos
+ * \param   index  indice del pedido
+ * \return  (-1) si hay error [limite invalido o puntero NULL] - (0) si Ok
+ *
+ */
 int pedido_procesarPedido(ePedido* arrayPedidos, int limite, int index);
 
 int pedido_mostrarCantidadPedidos(ePedido* arrayPedidos, int limite, int index);
